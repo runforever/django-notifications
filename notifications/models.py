@@ -190,6 +190,8 @@ class Notification(models.Model):
     emailed = models.BooleanField(default=False)
 
     data = JSONField(blank=True, null=True)
+    user_role = models.CharField(max_length=30, blank=True, default='')
+    notify_type = models.CharField(max_length=30, blank=True, default='')
     objects = managers.PassThroughManager.for_queryset_class(NotificationQuerySet)()
 
     class Meta:
@@ -260,6 +262,8 @@ def notify_handler(verb, **kwargs):
         description=kwargs.pop('description', None),
         timestamp=kwargs.pop('timestamp', now()),
         level=kwargs.pop('level', Notification.LEVELS.info),
+        user_role=kwargs.pop('user_role', ''),
+        notify_type=kwargs.pop('notify_type', ''),
     )
 
     for opt in ('target', 'action_object'):
